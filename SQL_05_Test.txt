@@ -1,0 +1,60 @@
+--5일차
+
+--TEST1: JOBS 테이블에서 MAX_SALARY 값의 최솟값과 MAX_SALARY 값의 최대값을 조회
+SELECT MIN(MAX_SALARY) AS 최솟값, MAX(MAX_SALARY) AS 최댓값
+FROM JOBS;
+
+
+--TEST2: JOBS 테이블에서 JOB_TITLE이 'Programmer'인 직업의 MAX_SALARY 값의 최솟값과 MAX_SALARY 값의 최대값을 조회
+SELECT JOB_TITLE, MIN(MAX_SALARY) AS 최솟값, MAX(MAX_SALARY) AS 최댓값
+FROM JOBS
+WHERE JOB_TITLE = 'Programmer'
+GROUP BY JOB_TITLE;
+
+
+--TEST3: EMPLOYEES 테이블에서 DEPARTMENT_ID가 50인 데이터의 HIRE_DATE 최소값과 최대값 조회
+SELECT DEPARTMENT_ID, MIN(HIRE_DATE) AS 최솟값, MAX(HIRE_DATE) AS 최댓값
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID = 50
+GROUP BY DEPARTMENT_ID;
+
+
+--TEST4: EMPLOYEES 테이블에서 DEPARTMENT_ID가 100인 데이터의 FIRST_NAME, SALARY,
+--       그리고 SALARY의 분산값을 HIRE_DATE 정렬기준으로 조회
+SELECT DEPARTMENT_ID, FIRST_NAME, SALARY, VARIANCE(SALARY) AS 분산값, HIRE_DATE
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID = 100
+GROUP BY DEPARTMENT_ID, FIRST_NAME, SALARY, HIRE_DATE
+ORDER BY HIRE_DATE ASC;
+
+
+--TEST5: employees 테이블에서 hire_date 값이 2004년 1월 1일부터 2006년 12월 31일 사이의 데이터를 
+--       job_id 기준으로 그룹화한 뒤에 job_id와 salary 최솟값과 최대값을 조회
+SELECT JOB_ID, MIN(SALARY) AS 최솟값, MAX(SALARY) AS 최댓값
+FROM EMPLOYEES
+--WHERE HIRE_DATE BETWEEN '20040101' AND '20061231' => 아래도 가능:
+WHERE HIRE_DATE BETWEEN TO_DATE('2004-01-01', 'YYYY-MM-DD') AND TO_DATE('2006-12-31', 'YYYY-MM-DD')
+GROUP BY JOB_ID;
+
+
+--TEST6: employees 테이블에서 department_id 가 50과 80인 데이터를 department_id와 job_id 기준으로 그룹화한 뒤에
+--       department_id와 job_id, salary 합계, 최솟값, 최대값을 job_id 기준으로 정렬하여 조회
+SELECT DEPARTMENT_ID, JOB_ID, SUM(SALARY) AS 합계, MIN(SALARY) AS 최솟값, MAX(SALARY) AS 최댓값
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID IN(50, 80)
+GROUP BY DEPARTMENT_ID, JOB_ID
+ORDER BY JOB_ID;
+
+
+--TEST7: employees 테이블에서 department_id와 job_id 기준으로 그룹화한 뒤에 salary 평균값이 12000 이상인 데이터만
+--       department_id와 job_id, salary 최솟값, 최대값, 평균을 department_id 기준으로 정렬하여 조회
+SELECT DEPARTMENT_ID, JOB_ID, MIN(SALARY) AS 최솟값, MAX(SALARY) AS 최댓값, AVG(SALARY) AS 평균
+FROM EMPLOYEES
+GROUP BY DEPARTMENT_ID, JOB_ID
+HAVING AVG(SALARY) >= 12000
+ORDER BY DEPARTMENT_ID;
+
+
+
+
+
