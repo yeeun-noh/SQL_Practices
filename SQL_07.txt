@@ -1,0 +1,121 @@
+--7일차
+
+SELECT *
+FROM EMP
+WHERE SAL > (
+    SELECT SAL
+    FROM EMP
+    WHERE ENAME = 'JONES'
+);
+
+
+SELECT *
+FROM EMP
+WHERE HIREDATE < (
+    SELECT HIREDATE
+    FROM EMP
+    WHERE ENAME = 'JONES'
+);
+
+
+--실행결과가 하나인 단일형 서브쿼리:
+SELECT E.EMPNO, E.ENAME, E.JOB, E.SAL, D.DEPTNO, D.DNAME, D.LOC
+FROM EMP E, DEPT D
+WHERE E.DEPTNO = D.DEPTNO
+    AND E.DEPTNO = 20
+    AND E.SAL > (
+        SELECT AVG(SAL)
+        FROM EMP
+);
+
+
+--실행결과가 여러개인 다중행 서브쿼리:
+--각 부서별 최고 급여와 급여를 받는 사원 정보 출력:
+SELECT *
+FROM EMP
+WHERE SAL IN (
+    SELECT MAX(SAL)
+    FROM EMP
+    GROUP BY DEPTNO
+);
+
+
+--ANY연산자/SOME연산자 => 조건이 하나라도 만족하면 서치됨!
+--ANY연산자:
+SELECT *
+FROM EMP
+WHERE SAL < ANY (
+    SELECT SAL
+    FROM EMP
+    WHERE DEPTNO = 30
+);
+
+
+--SOME연산자:
+SELECT *
+FROM EMP
+WHERE SAL < SOME (
+    SELECT SAL
+    FROM EMP
+    WHERE DEPTNO = 30
+);
+
+
+--ALL연산자 => 모든조건이 만족해야 서치됨! (ANY연산자/SOME연산자와 다름!)
+--ALL연산자:
+SELECT *
+FROM EMP
+WHERE SAL < ALL (
+    SELECT SAL
+    FROM EMP
+    WHERE DEPTNO = 30
+);
+
+
+--비교할 열이 여러개인 다중열 서브쿼리:
+SELECT *
+FROM EMP
+WHERE (DEPTNO, SAL) IN (
+    SELECT DEPTNO, MAX(SAL)
+    FROM EMP
+    GROUP BY DEPTNO
+);
+
+
+--FROM절에 사용하는 서브쿼리:
+SELECT E.EMPNO, E.ENAME, E.DEPTNO, D.DNAME, D.LOC
+FROM
+(SELECT * FROM EMP WHERE DEPTNO = 10) E,
+(SELECT * FROM DEPT) D
+WHERE E.DEPTNO = D.DEPTNO;
+
+
+--(DML)=> SELECT, INSERT, DELETE, UPDATE,
+--(DDL)=> CREATE, ALTER, DROP
+--(DCL)=> COMMIT, ROLLBACK, ...
+
+--DEPT테이블 카피본(DEPT_TMP) 생성하기:
+CREATE TABLE DEPT_TMP
+AS SELECT * FROM DEPT;
+
+
+SELECT * FROM DEPT_TMP;
+
+
+--DEPT_TMP테이블에 데이터 추가하기(INSERT INTO VALUES):
+INSERT INTO DEPT_TMP(DEPTNO, DNAME, LOC)
+VALUES (50, 'DATABASE', 'SEOUL');
+
+
+--필드명 생략가능:
+INSERT INTO DEPT_TMP
+VALUES (60, 'JAVA', 'SUWON');
+
+
+--생략하는 VALUE는 (null)로 출력됨: 
+INSERT INTO DEPT_TMP(DEPTNO, LOC)
+VALUES (70, 'SUWON');
+
+
+--카피본은 무조건 COMMIT으로 저장해야함:
+COMMIT;
