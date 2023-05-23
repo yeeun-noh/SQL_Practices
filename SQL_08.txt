@@ -133,3 +133,28 @@ MODIFY TEL VARCHAR(15);
 --특정 열 삭제하기(ALTER, DROP) => ALTER TABLE 테이블명 + DROP COLUMN 열이름
 ALTER TABLE EMP_DDL
 DROP COLUMN TEL;
+
+
+--임계구역 설명, COMMIT:
+UPDATE EMP_DDL
+SET SAL = 2000
+WHERE ENAME = 'SMITH';
+COMMIT; --DB에 데이터를 보내고(저장됨), 동시에 접속한 다른 서버의 연결이 가능(COMMIT후 lock이 풀림, COMMIT전 lock이 걸려있음)
+
+
+--테이블이름을 변경하기(RENAME) => RENAME 변경전테이블명 TO 변경될테이블명
+RENAME DEPT_TMP TO EMP_DDL2;
+
+
+--데이터 복구시키기(ROLLBACK) => MDL COMMIT만 가능(DDL은 불가능 - CREATE, DROP, ALTER, TRUNCATE)
+SELECT * FROM EMP_DDL;
+DELETE FROM EMP_DDL;
+ROLLBACK;
+
+
+--테이블의 데이터를 삭제하기(TRUNCATE) => TRUNCATE TABLE 테이블명
+TRUNCATE TABLE EMP_DDL; --=> ROLLBACK불가능 (DB에 바로 저장)
+
+
+--테이블 삭제하기(DROP) => DROP TABLE 테이블명
+DROP TABLE EMP_DDL;
