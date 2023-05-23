@@ -1,0 +1,61 @@
+--9일차
+
+--=================== 뷰 파트 ===================
+--뷰 : 가상테이블, 하나 이상의 테이블을 조회하는 SELECT문을 저장한 객체
+--뷰 사용목적 : 편리성(SELECT문의 복잡도를 완화하기 위해) + 보안성(테이블의 특정 열을 노출하고 싶지 않을 경우)
+
+SELECT * FROM EMP;
+
+
+-- 뷰 생성하기:
+CREATE VIEW VM_EMP
+AS (
+SELECT EMPNO, ENAME, JOB, DEPTNO
+FROM EMP
+);
+
+--뷰 확인하기:
+SELECT * FROM VM_EMP;
+
+
+--뷰 삭제하기:
+DROP VIEW VM_EMP;
+
+
+--=================== 시퀀스 파트 ===================
+--시퀀스 : 오라클 데이터베이스에서 특정 규칙에 맞는 연속 숫자를 생성하는 객체
+
+CREATE TABLE TEST (
+    ID NUMBER(3),
+    NAME VARCHAR(20),
+    PW VARCHAR2(10)
+);
+
+
+SELECT * FROM TEST;
+
+
+--시퀀스 생성하기 => INCREMENT BY, START WITH, MINVALUE, MAXVALUE, NOCYCLE, CACHE
+CREATE SEQUENCE TEST_SQL
+    INCREMENT BY 1
+    START WITH 1
+    MINVALUE 1
+    MAXVALUE 999;
+
+
+--시퀀스 사용하기(NEXTVAL - 다음번호를 생성):
+INSERT INTO TEST
+VALUES(TEST_SQL.NEXTVAL, '홍길동', '1234a');
+
+
+INSERT INTO TEST
+VALUES(TEST_SQL.NEXTVAL, '남문', '1234b');
+
+
+INSERT INTO TEST
+VALUES(TEST_SQL.NEXTVAL, '북문', '1234c');
+
+
+--시퀀스 사용하기(CURRVAL - 시퀀스에서 마지막으로 생성한 번호를 반환):
+INSERT INTO TEST
+VALUES(TEST_SQL.CURRVAL, '북문', '1234z');
