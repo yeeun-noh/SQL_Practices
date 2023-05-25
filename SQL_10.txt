@@ -25,7 +25,7 @@ VALUES(1);
 DROP TABLE SAMPLE;
 
 
---빈값을 허락하지 않는 NOT NULL (NULL추가시, 오류발생)
+--빈값을 허락하지 않는 NOT NULL (NULL추가시 오류발생)
 --테이블을 생성할때 NOT NULL 설정하기:
 CREATE TABLE SAMPLE (
     ID NUMBER(4) NOT NULL,
